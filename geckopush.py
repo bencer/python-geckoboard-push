@@ -1,13 +1,21 @@
-import requests, json
+import urllib.request
+import json
 
 class Gecko(object):
     def __init__(self, api_key):
         self.api_key = api_key
 
     def push(self, widget_key, data):
-        ret = requests.post("https://push.geckoboard.com/v1/send/%s" % widget_key, json.dumps({'api_key' : self.api_key, 'data' : data}), verify=False)
-        if not (ret.status_code == 200 and ret.json().get('success') == True):
-            raise ValueError(ret.content)
+        payload = json.dumps({'api_key' : self.api_key, 'data' : data})
+        DATA = bytes(payload, 'utf-8')
+        req = urllib.request.Request(
+           "https://push.geckoboard.com/v1/send/{:s}".format(widget_key),
+           method='POST',
+           data=DATA
+        )
+        res = urllib.request.urlopen(req)
+        if not (res.getcode() == 200 and json.loads(res.read().decode('utf-8')).get('success') == True):
+            raise ValueError(res.content)
 
     def number(self, widget_key, number1, number2=None):
         data = {'item' : []}
