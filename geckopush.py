@@ -52,4 +52,15 @@ class Gecko(object):
     def beater(self, *args, **kwargs):
         return lambda: self.heartbeat(*args, **kwargs)
 
+    def funnel(self, widget_key, phases):
+        data = { "item" : [] }
+        if isinstance(phases, dict):
+            for k, v in phases.items():
+                data['item'].append({"value" : v, "label" : k})
+            data['item'].sort(key=lambda v: v['value'], reverse=True)
+        else:
+            for phase in phases:
+                data['item'].append({"value" : phase, "label" : ""})
+            data['item'].sort(reverse=True)
+        return self.push(widget_key, data)
 
