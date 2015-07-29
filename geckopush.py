@@ -64,3 +64,18 @@ class Gecko(object):
             data['item'].sort(reverse=True)
         return self.push(widget_key, data)
 
+    def meter(self, widget_key, value, maxv, minv):
+        data = {}
+        data['item'] = value
+        data['min'] = {'value': maxv}
+        data['max'] = {'value': minv}
+        return self.push(widget_key, data)
+
+    def glist(self, widget_key, texts):
+        data = []
+        for text in texts:
+            if isinstance(text, dict):
+                for k, v in text.items():
+                    data.append({"title" : {"text" : k}, "description" : v})
+        return self.push(widget_key, data)
+
